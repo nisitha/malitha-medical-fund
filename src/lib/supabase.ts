@@ -92,12 +92,19 @@ export function getLocalDonations(): Donation[] {
         (d) =>
           d &&
           typeof d === 'object' &&
-          typeof d.donor_name === 'string' &&
-          d.donor_name.trim().length > 0 &&
+          ((typeof d.donor_name === 'string' && d.donor_name.trim().length > 0) ||
+            (typeof d.name === 'string' && d.name.trim().length > 0)) &&
           !isNaN(Number(d.amount))
       );
       if (valid.length > 0) {
-        return valid;
+        return valid.map((d) => {
+          const dName = (d.name || d.donor_name || 'Anonymous').trim();
+          return {
+            ...d,
+            name: dName,
+            donor_name: dName,
+          };
+        });
       }
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_DONORS));

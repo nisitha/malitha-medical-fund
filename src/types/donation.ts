@@ -1,11 +1,14 @@
-export type PaymentMethod = 'bank_transfer' | 'cash' | 'online' | 'other';
+export type PaymentMethod = 'bank_transfer' | 'cash' | 'online' | 'other' | string;
 
 export interface Donation {
-  id: string;
-  donor_name: string;
+  id: string | number;
+  donor_name?: string;
+  name?: string;
   amount: number;
   date: string; // YYYY-MM-DD
+  month?: string;
   note?: string;
+  slip_note?: string;
   payment_method?: PaymentMethod;
   is_verified?: boolean;
   created_at?: string;
@@ -19,4 +22,3 @@ export interface CampaignStats {
   currentMonthTotal: number;
   targetAmount: number;
 }
-

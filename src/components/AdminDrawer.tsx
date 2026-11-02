@@ -75,10 +75,10 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
 
   useEffect(() => {
     if (editingDonation) {
-      setDonorName(editingDonation.donor_name);
+      setDonorName(editingDonation.name || editingDonation.donor_name || '');
       setAmount(editingDonation.amount.toString());
       setDate(editingDonation.date);
-      setNote(editingDonation.note || '');
+      setNote(editingDonation.note || editingDonation.slip_note || '');
       setPaymentMethod(editingDonation.payment_method || 'bank_transfer');
       setAdminTab('add');
     }
@@ -143,10 +143,12 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
     if (editingDonation) {
       const updated: Donation = {
         ...editingDonation,
+        name: donorName.trim(),
         donor_name: donorName.trim(),
         amount: numAmount,
         date,
         note: note.trim() || undefined,
+        slip_note: note.trim() || undefined,
         payment_method: paymentMethod,
       };
 
@@ -160,10 +162,12 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
       }
     } else {
       const res = await addDonation({
+        name: donorName.trim(),
         donor_name: donorName.trim(),
         amount: numAmount,
         date,
         note: note.trim() || undefined,
+        slip_note: note.trim() || undefined,
         payment_method: paymentMethod,
       });
 
@@ -196,11 +200,11 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
     const headers = ['ID', 'Donor Name', 'Amount (LKR)', 'Date', 'Payment Method', 'Note'];
     const rows = donations.map((d) => [
       d.id,
-      `"${d.donor_name.replace(/"/g, '""')}"`,
+      `"${(d.name || d.donor_name || 'Anonymous').replace(/"/g, '""')}"`,
       d.amount,
       d.date,
       d.payment_method || 'bank_transfer',
-      `"${(d.note || '').replace(/"/g, '""')}"`,
+      `"${(d.note || d.slip_note || '').replace(/"/g, '""')}"`,
     ]);
 
     const csvContent =

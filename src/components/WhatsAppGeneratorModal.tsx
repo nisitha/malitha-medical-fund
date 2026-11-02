@@ -73,7 +73,7 @@ Here is the official transparent update for our brother Malitha Nishan's medical
 ${recentDonors
   .map(
     (d, i) =>
-      `${i + 1}. ${d.donor_name} - ${formatLKR(d.amount)}`
+      `${i + 1}. ${d.name || d.donor_name || 'Anonymous'} - ${formatLKR(d.amount)}`
   )
   .join('\n')}
 ${donations.length > 5 ? `...and ${donations.length - 5} more batchmates.` : ''}

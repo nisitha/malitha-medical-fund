@@ -29,7 +29,7 @@ function DashboardContent() {
     setIsAdminOpen(true);
   };
 
-  const handleDeleteDonation = async (id: string) => {
+  const handleDeleteDonation = async (id: string | number) => {
     if (confirm('Are you sure you want to remove this donation record?')) {
       const res = await deleteDonation(id);
       if (res.success) {
