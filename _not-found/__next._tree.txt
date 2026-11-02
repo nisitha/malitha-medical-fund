@@ -1,0 +1,4 @@
+:HL["/malitha-medical-fund/_next/static/chunks/26tcb1jx_laz7.css","style"]
+2:[["children",{"s":"__PAGE__","h":160}]]
+1:[["children",{"s":"/_not-found","h":96,"c":"$Q2"}]]
+0:{"b":"rFyrFfAKdLNXQqPoVBI33","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
