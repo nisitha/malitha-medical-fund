@@ -63,7 +63,11 @@ export function getSupabaseClient(): SupabaseClient | null {
 
   try {
     cachedClient = createClient(config.url, config.anonKey, {
-      auth: { persistSession: false },
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
     });
     lastUsedConfigStr = configStr;
     return cachedClient;
@@ -84,8 +88,19 @@ export function getLocalDonations(): Donation[] {
     }
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed) && parsed.length > 0) {
-      return parsed;
+      const valid = parsed.filter(
+        (d) =>
+          d &&
+          typeof d === 'object' &&
+          typeof d.donor_name === 'string' &&
+          d.donor_name.trim().length > 0 &&
+          !isNaN(Number(d.amount))
+      );
+      if (valid.length > 0) {
+        return valid;
+      }
     }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_DONORS));
     return INITIAL_DONORS;
   } catch (e) {
     console.warn('Error reading from localStorage, using INITIAL_DONORS:', e);

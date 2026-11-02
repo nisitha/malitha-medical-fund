@@ -19,16 +19,19 @@ export const DonorList: React.FC<DonorListProps> = ({
   const { filteredDonations, searchTerm, setSearchTerm, monthFilter, setMonthFilter } = useDonations();
 
   // Deterministic currency formatter for SSR and hydration consistency
-  const formatLKR = (val: number) => {
-    return `LKR ${Number(val).toLocaleString('en-US', {
+  const formatLKR = (val?: number) => {
+    const num = Number(val) || 0;
+    return `LKR ${num.toLocaleString('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })}`;
   };
 
-  const formatDate = (dateStr: string) => {
+  const formatDate = (dateStr?: string) => {
+    if (!dateStr) return '—';
     try {
-      const [y, m, d] = dateStr.split('-');
+      const [y, m, d] = String(dateStr).split('-');
+      if (!y || !m || !d) return String(dateStr);
       const dt = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
       return dt.toLocaleDateString('en-GB', {
         day: '2-digit',
@@ -36,20 +39,22 @@ export const DonorList: React.FC<DonorListProps> = ({
         year: 'numeric',
       });
     } catch (e) {
-      return dateStr;
+      return String(dateStr);
     }
   };
 
-  const getInitials = (name: string) => {
-    const clean = name.replace(/[()]/g, '').trim();
+  const getInitials = (name?: string) => {
+    if (!name) return 'KV';
+    const clean = String(name).replace(/[()]/g, '').trim();
     const parts = clean.split(/\s+/);
+    if (parts.length === 0 || !parts[0]) return 'KV';
     if (parts.length === 1) {
-      return parts[0].substring(0, 2).toUpperCase();
+      return Array.from(parts[0]).slice(0, 2).join('').toUpperCase();
     }
-    return ((parts[0][0] || '') + (parts[parts.length - 1][0] || '')).toUpperCase();
+    return ((Array.from(parts[0])[0] || '') + (Array.from(parts[parts.length - 1])[0] || '')).toUpperCase();
   };
 
-  const getAvatarStyle = (name: string) => {
+  const getAvatarStyle = (name?: string) => {
     const styles = [
       'bg-blue-50 text-[#0b3866] border-blue-200',
       'bg-rose-50 text-rose-900 border-rose-200',
@@ -57,9 +62,11 @@ export const DonorList: React.FC<DonorListProps> = ({
       'bg-amber-50 text-amber-900 border-amber-200',
       'bg-slate-100 text-slate-800 border-slate-200',
     ];
+    if (!name) return styles[0];
     let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    const str = String(name);
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
     return styles[Math.abs(hash) % styles.length];
   };

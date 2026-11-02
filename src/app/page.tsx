@@ -21,7 +21,7 @@ function DashboardContent() {
   const [isWhatsAppOpen, setIsWhatsAppOpen] = useState(false);
   const [isAdminUnlocked, setIsAdminUnlocked] = useState(false);
   const [editingDonation, setEditingDonation] = useState<Donation | null>(null);
-  const { deleteDonation } = useDonations();
+  const { deleteDonation, isMounted } = useDonations();
   const { showToast } = useToast();
 
   const handleEditDonation = (donation: Donation) => {
@@ -39,7 +39,10 @@ function DashboardContent() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-rose-900 selection:text-white">
+    <div
+      suppressHydrationWarning
+      className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-rose-900 selection:text-white"
+    >
       {/* Header */}
       <Header
         onOpenAdmin={() => setIsAdminOpen(true)}
@@ -47,7 +50,10 @@ function DashboardContent() {
       />
 
       {/* Main Container */}
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-6 sm:py-8 space-y-6 sm:space-y-8">
+      <main
+        suppressHydrationWarning
+        className="flex-1 max-w-5xl w-full mx-auto px-4 py-6 sm:py-8 space-y-6 sm:space-y-8"
+      >
         {/* Heartfelt Batch Solidarity Banner */}
         <section
           aria-label="Appeal Statement"
@@ -126,24 +132,29 @@ function DashboardContent() {
         onClose={() => setIsWhatsAppOpen(false)}
       />
 
-      {/* Mobile Floating Action Button (FAB) for fast WhatsApp Bulletin & Admin Quick Add */}
-      <div className="sm:hidden fixed bottom-5 right-4 z-40 flex flex-col gap-2 items-end pointer-events-auto">
-        <button
-          onClick={() => setIsWhatsAppOpen(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold text-xs shadow-lg border border-white/20 active:scale-95 transition-all cursor-pointer"
+      {/* Mobile Floating Action Button (FAB) only rendered after mount */}
+      {isMounted && (
+        <div
+          suppressHydrationWarning
+          className="sm:hidden fixed bottom-5 right-4 z-40 flex flex-col gap-2 items-end pointer-events-auto"
         >
-          <Share2 className="w-4 h-4" />
-          <span>WhatsApp Bulletin</span>
-        </button>
+          <button
+            onClick={() => setIsWhatsAppOpen(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold text-xs shadow-lg border border-white/20 active:scale-95 transition-all cursor-pointer"
+          >
+            <Share2 className="w-4 h-4" />
+            <span>WhatsApp Bulletin</span>
+          </button>
 
-        <button
-          onClick={() => setIsAdminOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white text-slate-800 border border-slate-200 text-xs font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
-        >
-          <PlusCircle className="w-4 h-4 text-rose-800" />
-          <span>{isAdminUnlocked ? 'Add Entry' : 'Admin'}</span>
-        </button>
-      </div>
+          <button
+            onClick={() => setIsAdminOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white text-slate-800 border border-slate-200 text-xs font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
+          >
+            <PlusCircle className="w-4 h-4 text-rose-800" />
+            <span>{isAdminUnlocked ? 'Add Entry' : 'Admin'}</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

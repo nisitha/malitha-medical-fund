@@ -368,19 +368,23 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
       );
     }
 
-    // Sort
+    // Sort safely
     result.sort((a, b) => {
       if (sortBy === 'latest') {
-        return new Date(b.date).getTime() - new Date(a.date).getTime() || b.id.localeCompare(a.id);
+        const timeDiff = new Date(b.date).getTime() - new Date(a.date).getTime();
+        if (timeDiff !== 0) return timeDiff;
+        return String(b.id || '').localeCompare(String(a.id || ''));
       }
       if (sortBy === 'oldest') {
-        return new Date(a.date).getTime() - new Date(b.date).getTime() || a.id.localeCompare(b.id);
+        const timeDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
+        if (timeDiff !== 0) return timeDiff;
+        return String(a.id || '').localeCompare(String(b.id || ''));
       }
       if (sortBy === 'highest') {
-        return b.amount - a.amount;
+        return Number(b.amount) - Number(a.amount);
       }
       if (sortBy === 'name') {
-        return a.donor_name.localeCompare(b.donor_name);
+        return String(a.donor_name || '').localeCompare(String(b.donor_name || ''));
       }
       return 0;
     });
