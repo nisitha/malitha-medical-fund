@@ -18,12 +18,12 @@ export const DonorList: React.FC<DonorListProps> = ({
 }) => {
   const { filteredDonations, searchTerm, setSearchTerm, monthFilter, setMonthFilter } = useDonations();
 
+  // Deterministic currency formatter for SSR and hydration consistency
   const formatLKR = (val: number) => {
-    return new Intl.NumberFormat('en-LK', {
-      style: 'currency',
-      currency: 'LKR',
+    return `LKR ${Number(val).toLocaleString('en-US', {
       minimumFractionDigits: 2,
-    }).format(val).replace('LKR', 'LKR ');
+      maximumFractionDigits: 2,
+    })}`;
   };
 
   const formatDate = (dateStr: string) => {

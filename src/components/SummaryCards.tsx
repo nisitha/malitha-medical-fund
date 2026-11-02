@@ -16,13 +16,12 @@ export const SummaryCards: React.FC = () => {
     return found ? found.label : 'Current Month';
   }, [monthFilter, availableMonths]);
 
-  // Format currency helper
+  // Deterministic currency formatter for SSR and hydration consistency
   const formatLKR = (val: number) => {
-    return new Intl.NumberFormat('en-LK', {
-      style: 'currency',
-      currency: 'LKR',
+    return `LKR ${Number(val).toLocaleString('en-US', {
       minimumFractionDigits: 2,
-    }).format(val).replace('LKR', 'LKR ');
+      maximumFractionDigits: 2,
+    })}`;
   };
 
   const progressPercentage = Math.min(

@@ -11,7 +11,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onOpenAdmin, onOpenWhatsApp }) => {
-  const { isRealtimeActive } = useDonations();
+  const { isRealtimeActive, isMounted } = useDonations();
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
@@ -33,11 +33,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAdmin, onOpenWhatsApp }) =
             <div className="flex items-center gap-1.5 text-rose-200">
               <span
                 className={`w-2 h-2 rounded-full ${
-                  isRealtimeActive ? 'bg-emerald-400' : 'bg-amber-300'
+                  isMounted && isRealtimeActive ? 'bg-emerald-400' : 'bg-amber-300'
                 }`}
               />
               <span className="font-mono text-[11px]">
-                {isRealtimeActive ? 'Live Realtime' : 'Verified Ledger'}
+                {isMounted && isRealtimeActive ? 'Live Realtime' : 'Verified Ledger'}
               </span>
             </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Share2, Copy, Check, MessageSquare, ExternalLink } from 'lucide-react';
 import { useDonations } from '@/context/DonationContext';
 import { useToast } from './Toast';
@@ -18,18 +18,19 @@ export const WhatsAppGeneratorModal: React.FC<WhatsAppGeneratorModalProps> = ({
   const { stats, donations } = useDonations();
   const { showToast } = useToast();
   const [copied, setCopied] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [todayStr, setTodayStr] = useState('02 Nov 2026');
+  const [siteOrigin, setSiteOrigin] = useState('https://nisitha.github.io/malitha-medical-fund');
 
   const formatLKR = (val: number) => {
-    return new Intl.NumberFormat('en-LK', {
-      style: 'currency',
-      currency: 'LKR',
+    return `LKR ${Number(val).toLocaleString('en-US', {
       minimumFractionDigits: 2,
-    }).format(val).replace('LKR', 'LKR ');
+      maximumFractionDigits: 2,
+    })}`;
   };
 
-  const [todayStr, setTodayStr] = useState('02 Nov 2026');
-
-  React.useEffect(() => {
+  useEffect(() => {
+    setIsMounted(true);
     setTodayStr(
       new Date().toLocaleDateString('en-GB', {
         day: '2-digit',
@@ -37,9 +38,12 @@ export const WhatsAppGeneratorModal: React.FC<WhatsAppGeneratorModalProps> = ({
         year: 'numeric',
       })
     );
+    if (typeof window !== 'undefined') {
+      setSiteOrigin(window.location.origin + window.location.pathname.replace(/\/$/, ''));
+    }
   }, []);
 
-  if (!isOpen) return null;
+  if (!isOpen || !isMounted) return null;
 
   const recentDonors = donations.slice(0, 5);
   const bank = CAMPAIGN_INFO.bankDetails;
@@ -78,7 +82,7 @@ ${donations.length > 5 ? `...and ${donations.length - 5} more batchmates.` : ''}
 Please share this message in your batch groups and WhatsApp status.
 
 🌐 *View Live Donor Ledger & Updates:*
-${typeof window !== 'undefined' ? window.location.origin : 'https://kv2011-malitha-relief.vercel.app'}`;
+${siteOrigin}`;
 
   const handleCopy = async () => {
     try {

@@ -36,11 +36,13 @@ interface DonationContextType {
   supabaseConfig: SupabaseConfig | null;
   updateSupabaseConfig: (config: SupabaseConfig | null) => Promise<boolean>;
   availableMonths: { key: string; label: string; count: number; total: number }[];
+  isMounted: boolean;
 }
 
 const DonationContext = createContext<DonationContextType | undefined>(undefined);
 
 export function DonationProvider({ children }: { children: React.ReactNode }) {
+  const [isMounted, setIsMounted] = useState(false);
   const [donations, setDonations] = useState<Donation[]>(INITIAL_DONORS);
   const [loading, setLoading] = useState(true);
   const [backendMode, setBackendMode] = useState<'supabase' | 'local'>('local');
@@ -56,6 +58,7 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
   const [currentMonthKey, setCurrentMonthKey] = useState('2026-11');
 
   useEffect(() => {
+    setIsMounted(true);
     const now = new Date();
     const y = now.getFullYear();
     const m = String(now.getMonth() + 1).padStart(2, '0');
@@ -409,6 +412,7 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
         supabaseConfig,
         updateSupabaseConfig,
         availableMonths,
+        isMounted,
       }}
     >
       {children}
