@@ -174,7 +174,11 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
       setIsSubmitting(false);
 
       if (res.success) {
-        showToast('Donation Recorded', 'success', `${donorName} - LKR ${numAmount.toLocaleString()}`);
+        if ((res as any).warning) {
+          showToast('Saved Locally (Supabase RLS Active)', 'warning', (res as any).message);
+        } else {
+          showToast('Donation Recorded', 'success', `${donorName} - LKR ${numAmount.toLocaleString()}`);
+        }
         try {
           confetti({
             particleCount: 35,

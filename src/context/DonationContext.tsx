@@ -88,6 +88,13 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
   // Sync from Supabase or Local Storage
   const loadDonations = useCallback(async () => {
     setLoading(true);
+
+    // Immediately load from localStorage so there is zero flash of outdated SSR data
+    const local = getLocalDonations();
+    if (local && local.length > 0) {
+      setDonations(local.map(normalizeDonation));
+    }
+
     const client = getSupabaseClient();
     const config = getStoredSupabaseConfig();
     setSupabaseConfig(config);
@@ -103,22 +110,32 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
           console.warn('Supabase fetch error, falling back to local storage:', error.message);
           setBackendMode('local');
           setIsRealtimeActive(false);
-          const local = getLocalDonations();
           setDonations(local.map(normalizeDonation));
         } else if (data && data.length > 0) {
           setDonations(data.map(normalizeDonation));
+          // Keep local storage fresh with cloud data
+          saveLocalDonations(data.map(normalizeDonation));
           setBackendMode('supabase');
           setIsRealtimeActive(true);
         } else {
-          // If table is empty, seed it with INITIAL_DONORS or local donations
-          const local = getLocalDonations();
+          // If Supabase table is empty (0 records), attempt to seed initial records
           try {
-            await client.from('donations').upsert(local);
-            setDonations(local.map(normalizeDonation));
+            const dbPayload = local.map((d) => ({
+              name: (d.name || d.donor_name || 'Anonymous Contributor').trim(),
+              amount: Number(d.amount) || 0,
+              date: d.date,
+              month: d.month || (d.date ? String(d.date).substring(0, 7) : '2026-11'),
+              payment_method: d.payment_method || 'bank_transfer',
+              slip_note: d.slip_note || d.note || null,
+            }));
+            const { error: seedErr } = await client.from('donations').insert(dbPayload);
+            if (seedErr) {
+              console.warn('Seeding supabase insert error (RLS or permissions):', seedErr.message);
+            }
           } catch (seedErr) {
             console.warn('Seeding supabase failed:', seedErr);
-            setDonations(local.map(normalizeDonation));
           }
+          setDonations(local.map(normalizeDonation));
           setBackendMode('supabase');
           setIsRealtimeActive(true);
         }
@@ -126,12 +143,12 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
         console.warn('Supabase connection failed:', err);
         setBackendMode('local');
         setIsRealtimeActive(false);
-        setDonations(getLocalDonations().map(normalizeDonation));
+        setDonations(local.map(normalizeDonation));
       }
     } else {
       setBackendMode('local');
       setIsRealtimeActive(false);
-      setDonations(getLocalDonations().map(normalizeDonation));
+      setDonations(local.map(normalizeDonation));
     }
     setLoading(false);
   }, []);
@@ -255,7 +272,14 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
           const next = [newRecord, ...donations];
           setDonations(next);
           saveLocalDonations(next);
-          return { success: true, message: 'Saved to local storage (Supabase write had issue)' };
+          const isRls = error.code === '42501' || (typeof error.message === 'string' && error.message.includes('row-level security'));
+          return {
+            success: true,
+            warning: isRls,
+            message: isRls
+              ? 'Saved locally! (Supabase RLS is active: disable RLS in Supabase SQL editor to sync live across devices)'
+              : 'Saved to local storage',
+          };
         }
 
         const newRecord = normalizeDonation(insertedData);

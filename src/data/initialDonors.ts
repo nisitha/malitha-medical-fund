@@ -265,6 +265,17 @@ export const INITIAL_DONORS: Donation[] = [
     is_verified: true,
     created_at: '2026-11-02T12:30:00Z',
   },
+  {
+    id: 25,
+    name: 'Sadun Chamara',
+    donor_name: 'Sadun Chamara',
+    amount: 3000,
+    month: '2026-11',
+    date: '2026-11-03',
+    payment_method: 'bank_transfer',
+    is_verified: true,
+    created_at: '2026-11-03T08:00:00Z',
+  },
 ];
 
 export const CAMPAIGN_INFO = {

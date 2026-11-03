@@ -2,7 +2,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { Donation } from '@/types/donation';
 import { INITIAL_DONORS } from '@/data/initialDonors';
 
-const STORAGE_KEY = 'kv2011_malitha_donations_v24_en';
+const STORAGE_KEY = 'kv2011_malitha_donations_v25_en';
 const SUPABASE_CONFIG_KEY = 'kv2011_supabase_config';
 
 export interface SupabaseConfig {
