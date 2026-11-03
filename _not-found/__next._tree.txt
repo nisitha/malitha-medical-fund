@@ -1,4 +1,4 @@
-:HL["/malitha-medical-fund/_next/static/chunks/2ygrga2b90y1k.css","style"]
+:HL["/malitha-medical-fund/_next/static/chunks/3fqel9fyj48k4.css","style"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"/_not-found","h":96,"c":"$Q2"}]]
-0:{"b":"kN6xa6X-24SR_1PuTYzgc","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"-nTcZpai0Y8gpuEFfqUtA","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
