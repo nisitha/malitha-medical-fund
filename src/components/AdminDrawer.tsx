@@ -93,13 +93,13 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
       setPinError(false);
 
       if (nextPin.length === 4) {
-        if (nextPin === '2011') {
+        if (nextPin === '2626') {
           setIsAdminUnlocked(true);
           setPin('');
           showToast('Admin Mode Active', 'success', 'Kalutara Vidyalaya 2011 Committee Authorized');
         } else {
           setPinError(true);
-          showToast('Incorrect PIN', 'error', 'Please enter the batch year PIN');
+          showToast('Incorrect PIN', 'error', 'Please enter the valid authorization PIN');
           setTimeout(() => {
             setPin('');
             setPinError(false);
@@ -265,7 +265,7 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
               <p className="text-xs text-slate-500">
                 {isAdminUnlocked
                   ? 'Kalutara Vidyalaya 2011 A/L Committee'
-                  : 'Enter 4-digit Batch Year PIN (2011)'}
+                  : 'Enter 4-digit Security PIN'}
               </p>
             </div>
           </div>
@@ -298,9 +298,9 @@ export const AdminDrawer: React.FC<AdminDrawerProps> = ({
                 <KeyRound className="w-7 h-7" />
               </div>
 
-              <h4 className="text-base font-bold text-slate-900 text-center">Batch Committee PIN</h4>
+              <h4 className="text-base font-bold text-slate-900 text-center">Batch Committee Authorization</h4>
               <p className="text-xs text-slate-500 text-center mt-1 mb-5">
-                Enter batch year PIN (Default: <strong className="font-mono text-slate-800">2011</strong>)
+                Enter 4-digit security PIN to access admin controls
               </p>
 
               {/* Dots */}

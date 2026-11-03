@@ -113,7 +113,7 @@ function DashboardContent() {
       {/* Footer */}
       <Footer />
 
-      {/* Slide-up Admin Drawer / Modal (PIN: 2011) */}
+      {/* Slide-up Admin Drawer / Modal (PIN: 2626) */}
       <AdminDrawer
         isOpen={isAdminOpen}
         onClose={() => {

@@ -55,8 +55,8 @@ A high-performance, mobile-first web application designed to track contributions
 4. **Bilingual Real-Time Search**:
    - Instant search in both Sinhala (e.g., `තරිදු`, `චානක`, `කසුන්`) and English (e.g., `Tharindu`, `Chanaka`, `Kasun`, `5000`).
 
-5. **Mobile-First Slide-Up Admin Drawer (PIN: 2011)**:
-   - Protected by numeric keypad with 4-digit batch PIN: **`2011`**.
+5. **Mobile-First Slide-Up Admin Drawer (Protected)**:
+   - Protected by numeric keypad with 4-digit committee authorization PIN: **`2626`**.
    - Add new entries with real-time updates and live database synchronization.
    - Auditor CSV Export: 1-click download of all records for batch committee auditing.
 
