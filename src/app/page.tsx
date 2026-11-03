@@ -52,8 +52,18 @@ function DashboardContent() {
       {/* Main Container */}
       <main
         suppressHydrationWarning
-        className="flex-1 max-w-5xl w-full mx-auto px-4 py-6 sm:py-8 space-y-6 sm:space-y-8"
+        className="flex-1 max-w-5xl w-full mx-auto px-4 py-4 sm:py-7 space-y-5 sm:space-y-7"
       >
+        {/* Top Summary Metric Dashboard Cards (Immediate view on mobile) */}
+        <section aria-label="Campaign Summary Metrics">
+          <SummaryCards />
+        </section>
+
+        {/* Bank Account Details Card */}
+        <section aria-label="Official Bank Details">
+          <BankCard />
+        </section>
+
         {/* Heartfelt Batch Solidarity Banner */}
         <section
           aria-label="Appeal Statement"
@@ -78,16 +88,6 @@ function DashboardContent() {
               </p>
             </div>
           </div>
-        </section>
-
-        {/* Bank Account Details Card */}
-        <section aria-label="Official Bank Details">
-          <BankCard />
-        </section>
-
-        {/* Top Summary Metric Cards */}
-        <section aria-label="Campaign Summary Metrics">
-          <SummaryCards />
         </section>
 
         {/* Horizontal Monthly Filter Tabs */}
@@ -132,25 +132,25 @@ function DashboardContent() {
         onClose={() => setIsWhatsAppOpen(false)}
       />
 
-      {/* Mobile Floating Action Button (FAB) only rendered after mount */}
+      {/* Sleek Mobile Floating Action Dock (Non-overlapping) */}
       {isMounted && (
         <div
           suppressHydrationWarning
-          className="sm:hidden fixed bottom-5 right-4 z-40 flex flex-col gap-2 items-end pointer-events-auto"
+          className="sm:hidden fixed bottom-4 right-3.5 z-40 flex items-center gap-2 pointer-events-auto"
         >
           <button
             onClick={() => setIsWhatsAppOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold text-xs shadow-lg border border-white/20 active:scale-95 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold text-xs shadow-md border border-white/20 active:scale-95 transition-all cursor-pointer"
           >
-            <Share2 className="w-4 h-4" />
-            <span>WhatsApp Bulletin</span>
+            <Share2 className="w-3.5 h-3.5" />
+            <span>Bulletin</span>
           </button>
 
           <button
             onClick={() => setIsAdminOpen(true)}
             className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-white text-slate-800 border border-slate-200 text-xs font-semibold shadow-md active:scale-95 transition-all cursor-pointer"
           >
-            <PlusCircle className="w-4 h-4 text-rose-800" />
+            <PlusCircle className="w-3.5 h-3.5 text-rose-800" />
             <span>{isAdminUnlocked ? 'Add Entry' : 'Admin'}</span>
           </button>
         </div>
