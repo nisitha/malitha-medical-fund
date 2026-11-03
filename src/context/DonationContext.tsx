@@ -174,7 +174,7 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
 
     // 2. Window storage event for browsers where BroadcastChannel isn't active
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'kv2011_malitha_donations_v24_en' && e.newValue) {
+      if (e.key && e.key.startsWith('kv2011_malitha_donations_') && e.newValue) {
         try {
           const updated = JSON.parse(e.newValue);
           if (Array.isArray(updated)) {
@@ -228,9 +228,26 @@ export function DonationProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
+    // 4. Auto-re-fetch on tab focus or screen unlock (essential for mobile devices)
+    const handleVisibility = () => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
+        loadDonations();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', loadDonations);
+
+    // 5. Periodic background polling safety sync every 20 seconds
+    const interval = setInterval(() => {
+      loadDonations();
+    }, 20000);
+
     return () => {
       if (bc) bc.close();
       window.removeEventListener('storage', handleStorageChange);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', loadDonations);
+      clearInterval(interval);
       if (channel && client) {
         client.removeChannel(channel);
       }
